@@ -1,5 +1,3 @@
-getwd()
-setwd("D:/R/work")
 a<-ls()
 rm(all)
 a<-ls()
@@ -10,13 +8,15 @@ sessionInfo()
 getwd()
 setwd("D:/R/work")
 ## configuration de la connection à PG
-dbDisconnect(con)
-dbUnloadDriver(m)
+##dbDisconnect(con)
+##dbUnloadDriver(m)
 
 m <- dbDriver("PostgreSQL")
 con <- dbConnect(m, user= "postgres", password="postgres", dbname="postgis21",  port=5434)
 ##dbDisconnect(con)
 ## don : table des donneurs
+
+
 for (i in 1:1919) {
   print(i)
   
@@ -34,20 +34,21 @@ for (i in 1:1919) {
   coord <- afcm$li ##rownames est conserve
   
   
-  rec <- subset(coord, substr(rownames(coord),1,1)=='I') ##receveur : les iris
+  rec <- subset(coord, substr(rownames(coord),1,1)=='I') ##receveur  
   don <- subset(coord, substr(rownames(coord),1,1)=='M') ##donneur
   
-  ## ajout d un id de 2000 en 2000
+  ## ajout d un id de 1000 en 1000
   rec <- cbind(rec, 'id'= (c(1:nrow(rec)))) ## creation variable idex de 1 a nrow 
-  rec$id <- floor(rec$id / 2000) ## creation de 0 a xx
+  rec$id <- floor(rec$id / 1000) ## creation de 0 a xx
   maxid <- max(rec$id)
-  ## boucle sur les paquets de 2000
+  ## boucle sur les paquets de 1000
   for (j in 0:maxid) {
     print(j)
     out <- NND.hotdeck(data.rec=subset(rec,id==j), data.don=don, dist.fun="Euclidean",
                        match.vars=colnames(don))
-    res <- data.frame(cbind(out$mtc.ids,out$dist.rd))
-    dbWriteTable(con, "resfusion", res, append = T)
+    res <- data.frame(cbind(out$mtc.ids,out$dist.rd,i,j)) ## on stocke aussi i et j 
+    dbWriteTable(con, "resfusion1000", res, append = T)
+    rm(out, res) ## suppression fichiers
   }
-  rm(coord, afcm, fic, res, out)
+  rm(coord, afcm, fic, rec, don) ## suppression fichiers
 }
