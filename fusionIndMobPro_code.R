@@ -17,7 +17,7 @@ con <- dbConnect(m, user= "postgres", password="postgres", dbname="postgis21",  
 ## don : table des donneurs
 
 
-for (i in 1:1919) {
+for (i in 1:1919) { ## recommencer a partir de 1088. supprimer 1088 sur la table pg
   print(i)
   
   query <- paste0("select agerevq, cs1, derou, dipl, empl, immi,inatc , lprm , moco, na5  , nperr, sexe , statr,  stocd, tp , trans, typl, typmr, voit, 1 as t, 'I'||ident as id, iris from fusion.fd_ind where idgeo=", i ," union select agerevq, cs1, derou, dipl, empl, immi, inatc , lprm , moco, na5  , nperr, sexe , statr,  stocd, tp , trans, typl, typmr, voit, 2 as t, 'M'||ident as id, 'XX' as iris from fusion.fd_mobpro where idgeo=", i ," ; ")
